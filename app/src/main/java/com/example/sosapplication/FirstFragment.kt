@@ -24,8 +24,8 @@ class FirstFragment : Fragment() {
     private val binding get() = _binding!!
 
     override fun onCreateView(
-            inflater: LayoutInflater, container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? {
 
         _binding = FragmentFirstBinding.inflate(inflater, container, false)
@@ -37,20 +37,21 @@ class FirstFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         var number = 972528494174
         binding.buttonFirst.setOnClickListener {
-//            findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)
             val sendIntent: Intent = Intent().apply {
-                action = Intent.ACTION_SEND
+                /*action = Intent.ACTION_SEND
                 putExtra(Intent.EXTRA_TEXT, "This is my text to send.")
                 setPackage("com.whatsapp")
-                type = "text/bold"
+                type = "text/bold"*/
+            }
 
-                /*var url = "https://api.whatsapp.com/send?phone=" + number+ "&text=text text"
-            val actionIntent:Intent=Intent().apply {
+            var url = "https://api.whatsapp.com/send?phone=" + number + "&text=text text"
+            val actionIntent: Intent = Intent().apply {
                 action = Intent.ACTION_VIEW
                 setData(Uri.parse(url))
-        */
+                setPackage("com.whatsapp")
             }
-            val shareIntent = Intent.createChooser(sendIntent, null)
+            val shareIntent = Intent.createChooser(actionIntent, null)
+//            shareIntent.setPackage("com.whatsapp")
             startActivity(shareIntent)
         }
     }

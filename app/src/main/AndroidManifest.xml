@@ -20,6 +20,27 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".ActivityContact"
+            android:exported="true"
+            android:label="@string/select_contacts"
+            android:theme="@style/Theme.SOSApplication.NoActionBar">
+
+        </activity>
+        <activity
+            android:name="com.onegravity.contactpicker.core.ContactPickerActivity"
+            android:enabled="true"
+            android:exported="false" >
+
+            <intent-filter>
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+            </intent-filter>
+        </activity>
     </application>
+
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+
 
 </manifest>

@@ -1,5 +1,7 @@
 package com.example.sosapplication
 
+import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
 import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
@@ -9,7 +11,18 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import android.view.Menu
 import android.view.MenuItem
+import androidx.core.content.ContextCompat
 import com.example.sosapplication.databinding.ActivityMainBinding
+import android.util.Log
+import android.widget.Toast
+import com.example.sosapplication.ActivityContact.CONTACT_PICKER_REQUEST
+
+import com.wafflecopter.multicontactpicker.MultiContactPicker
+
+import com.wafflecopter.multicontactpicker.ContactResult
+
+
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -30,8 +43,16 @@ class MainActivity : AppCompatActivity() {
 
         binding.fab.setOnClickListener { view ->
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show()
+                .setAction("Action", null).show()
+            navController.navigate(R.id.action_FirstFragment_to_SecondFragment)
         }
+    }
+    private fun checkContactPermission(): Boolean{
+        //check if permission was granted/allowed or not, returns true if granted/allowed, false if not
+        return  ContextCompat.checkSelfPermission(
+            this,
+            android.Manifest.permission.READ_CONTACTS
+        ) == PackageManager.PERMISSION_GRANTED
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -55,4 +76,19 @@ class MainActivity : AppCompatActivity() {
         return navController.navigateUp(appBarConfiguration)
                 || super.onSupportNavigateUp()
     }
+
+    /*override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode === CONTACT_PICKER_REQUEST) {
+            if (resultCode === RESULT_OK) {
+                val results: List<ContactResult> = MultiContactPicker.obtainResult(data)
+                Log.d("MyTag", results[0].displayName)
+                println("con"+ results.get(0).displayName)
+
+                Toast.makeText(this, "contact", Toast.LENGTH_SHORT).show()
+            } else if (resultCode === RESULT_CANCELED) {
+                println("User closed the picker without selecting items.")
+            }
+        }
+    }*/
 }

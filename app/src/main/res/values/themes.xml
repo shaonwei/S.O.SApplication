@@ -18,6 +18,17 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
+    <style name="MyCustomPickerTheme" parent="MultiContactPicker.Azure">
+        <item name="colorPrimary">@color/coffee_pot</item>
+        <item name="colorPrimaryVariant">@color/coffee</item>
+        <item name="mcpToolbarTheme">@style/MyCustomToolbarTheme</item>
+        <item name="mcpListPopupWindowStyleTheme">@style/MyCustomToolbarTheme</item>
+    </style>
+
+    <style name="MyCustomToolbarTheme" parent="ThemeOverlay.AppCompat.Light">
+        <item name="colorSecondary">@color/dusty_rose</item>
+        <item name="colorSecondaryVariant">@color/rosewater</item>
+    </style>
 
     <style name="Theme.SOSApplication.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 

@@ -8,40 +8,62 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.switchmaterial.SwitchMaterial;
+import com.google.android.material.textfield.TextInputEditText;
 import com.wafflecopter.multicontactpicker.ContactResult;
 import com.wafflecopter.multicontactpicker.LimitColumn;
 import com.wafflecopter.multicontactpicker.MultiContactPicker;
 
 import java.util.List;
 
-public class ActivityContact extends AppCompatActivity {
+public class ActivityEdit extends AppCompatActivity {
 
     public static final int CONTACT_PICKER_REQUEST = 100;
     public static final int PERMISSIONS_REQUEST_READ_CONTACTS = 102;
-    private Button contact;
+    private Button contactBtn;
+    private TextInputEditText inputEditText;
+    private SwitchMaterial locationSwitch;
+    private FloatingActionButton fab;
+    private List<ContactResult> contactResults;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_contacts);
-        contact = (Button) findViewById(R.id.btn_contacts);
-        contact.setOnClickListener(new View.OnClickListener() {
+        setContentView(R.layout.activity_contacts);
+//        contactBtn = (Button) findViewById(R.id.btn_select_contacts);
+        inputEditText = (TextInputEditText) findViewById(R.id.edit_text);
+        locationSwitch = findViewById(R.id.location_toggle);
+        fab = findViewById(R.id.fab);
+        contactBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 requestContactPermission();
+            }
+        });
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SOSMessage message = new SOSMessage(inputEditText.toString(), contactResults, locationSwitch.isChecked());
+                Snackbar.make(view, "Save", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+//                todo: change
+                Intent intent = new Intent(ActivityEdit.this, MainActivity.class);
+                intent.putExtra("text", message.getText());
+                intent.putExtra("contactName", message.getContacts().get(0).getDisplayName());
+                intent.putExtra("contact", message.getContacts().get(0).getPhoneNumbers().get(0));
+                startActivity(intent);
+
             }
         });
     }
@@ -96,7 +118,8 @@ public class ActivityContact extends AppCompatActivity {
     }
 
     private void getContacts() {
-        new MultiContactPicker.Builder(ActivityContact.this) //Activity/fragment context
+        Toast.makeText(this, "activitycontact", Toast.LENGTH_SHORT).show();
+        new MultiContactPicker.Builder(ActivityEdit.this) //Activity/fragment context
                 .theme(R.style.MyCustomPickerTheme) //Optional - default: MultiContactPicker.Azure
                 .hideScrollbar(false) //Optional - default: false
                 .showTrack(true) //Optional - default: true
@@ -120,9 +143,12 @@ public class ActivityContact extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == CONTACT_PICKER_REQUEST) {
             if (resultCode == RESULT_OK) {
-                List<ContactResult> results = MultiContactPicker.obtainResult(data);
+                contactResults = MultiContactPicker.obtainResult(data);
 //                Log.d("MyTag", results.get(0).getDisplayName());
-                Toast.makeText(this, results.get(0).getDisplayName(), Toast.LENGTH_SHORT).show();
+                Snackbar.make(fab, "Replace with your own action", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+                Toast.makeText(this, contactResults.get(0).getDisplayName(), Toast.LENGTH_SHORT).show();
+
             } else if (resultCode == RESULT_CANCELED) {
                 System.out.println("User closed the picker without selecting items.");
             }

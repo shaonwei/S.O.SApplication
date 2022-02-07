@@ -22,7 +22,7 @@
         </activity>
 
         <activity
-            android:name=".ActivityContact"
+            android:name=".ActivityEdit"
             android:exported="true"
             android:label="@string/select_contacts"
             android:theme="@style/Theme.SOSApplication.NoActionBar">
@@ -41,6 +41,7 @@
     </application>
 
     <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
 
 
 </manifest>

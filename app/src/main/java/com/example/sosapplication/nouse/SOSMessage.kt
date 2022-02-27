@@ -1,4 +1,4 @@
-package com.example.sosapplication
+package com.example.sosapplication.nouse
 
 import com.wafflecopter.multicontactpicker.ContactResult
 

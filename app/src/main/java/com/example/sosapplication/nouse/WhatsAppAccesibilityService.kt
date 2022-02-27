@@ -1,4 +1,4 @@
-package com.example.sosapplication
+package com.example.sosapplication.nouse
 
 import android.accessibilityservice.AccessibilityService
 import android.view.accessibility.AccessibilityEvent

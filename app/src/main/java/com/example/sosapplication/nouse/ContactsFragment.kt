@@ -1,4 +1,4 @@
-/*
+package com.example.sosapplication.nouse/*
 package com.example.sosapplication
 
 import android.os.Bundle

@@ -1,4 +1,4 @@
-package com.example.sosapplication;
+package com.example.sosapplication.nouse;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;

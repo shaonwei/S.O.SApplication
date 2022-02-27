@@ -1,3 +1,4 @@
+package com.example.sosapplication.nouse;/*
 package com.example.sosapplication;
 
 import android.annotation.TargetApi;
@@ -155,3 +156,4 @@ public class ActivityEdit extends AppCompatActivity {
         }
     }
 }
+*/

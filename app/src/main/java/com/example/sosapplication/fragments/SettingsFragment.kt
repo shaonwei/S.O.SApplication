@@ -1,4 +1,4 @@
-package com.example.sosapplication
+package com.example.sosapplication.fragments
 
 import android.annotation.SuppressLint
 import android.content.Intent
@@ -13,12 +13,12 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.LiveData
 import androidx.navigation.fragment.findNavController
-import androidx.lifecycle.ViewModelProvider
+import com.example.sosapplication.CONTACT_PICK_CODE
+import com.example.sosapplication.Contact
+import com.example.sosapplication.R
+import com.example.sosapplication.SharedViewModel
 import com.example.sosapplication.databinding.FragmentSettingsBinding
-import com.google.android.material.snackbar.Snackbar
-import java.util.logging.Logger
 
 
 /**

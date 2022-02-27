@@ -1,15 +1,24 @@
 package com.example.sosapplication
 
+import android.annotation.SuppressLint
+import android.content.Intent
+import android.database.Cursor
+import android.net.Uri
 import android.os.Bundle
+import android.provider.ContactsContract
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.LiveData
 import androidx.navigation.fragment.findNavController
 import androidx.lifecycle.ViewModelProvider
 import com.example.sosapplication.databinding.FragmentSettingsBinding
 import com.google.android.material.snackbar.Snackbar
+import java.util.logging.Logger
 
 
 /**
@@ -17,62 +26,47 @@ import com.google.android.material.snackbar.Snackbar
  */
 class SettingsFragment : Fragment() {
 
-    private var _binding: FragmentSettingsBinding? = null
 
-    // This property is only valid between onCreateView and
-    // onDestroyView.
+    private val sharedViewModel: SharedViewModel by activityViewModels()
+    private var _binding: FragmentSettingsBinding? = null
     private val binding get() = _binding!!
-    private val appViewModel:AppViewModel by activityViewModels()
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+    val contact = Contact()
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         _binding = FragmentSettingsBinding.inflate(inflater, container, false)
+
+        sharedViewModel.message.observe(viewLifecycleOwner, { message ->
+            binding.etMessage.setText(message)
+        })
+        sharedViewModel.contact.observe(viewLifecycleOwner, { contact ->
+            binding.contactLayout.tvContactName.text = contact.name
+            binding.contactLayout.tvContactNumber.text = contact.phoneNumber
+        })
+
+        binding.btnSave.setOnClickListener {
+            sharedViewModel.changeMessage(binding.etMessage.text.toString())
+            sharedViewModel.changeContact(contact)
+
+            findNavController().navigate(R.id.action_SettingsFragment_to_MainFragment)
+
+        }
+
+        binding.contactLayout.btnEditContact.setOnClickListener {
+            /*val contactPickerIntent = Intent(
+                Intent.ACTION_PICK,
+                ContactsContract.CommonDataKinds.Phone.CONTENT_URI
+            )
+            startActivityForResult(contactPickerIntent, REQUEST_CODE)*/
+
+            pickContact()
+
+        }
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        //var viewModel = ViewModelProvider(this).get(AppViewModel::class.java)
-        var text=binding.editText.text.toString()
-        Snackbar.make(view, text, Snackbar.LENGTH_LONG)
-            .setAction("Action", null).show()
-        //back to main fragment
-        binding.btnSave.setOnClickListener {
-            appViewModel.changeText(text)
-            findNavController().navigate(R.id.action_SettingsFragment_to_MainFragment)
-        }
-/*
-        binding.btnSelectContacts.setOnClickListener {
-//            findNavController().navigate(R.id.action_SecondFragment_to_ContactsFragment)
-            val intent = Intent(context, ActivityEdit::class.java).apply {
-//                putExtra(EXTRA_MESSAGE, message)
-            }
-            startActivity(intent)
-            Toast.makeText(context, "second fragment", Toast.LENGTH_LONG).show()
-            */
-/* MultiContactPicker.Builder(this)//Activity/fragment context
-                 .theme(R.style.MyCustomPickerTheme) //Optional - default: MultiContactPicker.Azure
-                 .hideScrollbar(false) //Optional - default: false
-                 .showTrack(true) //Optional - default: true
-                 .searchIconColor(Color.WHITE) //Option - default: White
-                 .setChoiceMode(MultiContactPicker.CHOICE_MODE_MULTIPLE) //Optional - default: CHOICE_MODE_MULTIPLE
-                 .handleColor(resources.getColor(R.color.coffee_pot)) //Optional - default: Azure Blue
-                 .bubbleColor(resources.getColor(R.color.coffee_pot)) //Optional - default: Azure Blue
-                 .trackColor(resources.getColor(R.color.dusty_rose))
-                 .bubbleTextColor(Color.WHITE) //Optional - default: White
-                 .setTitleText("Select Contacts") //Optional - default: Select Contacts
-                 .setLoadingType(MultiContactPicker.LOAD_ASYNC) //Optional - default LOAD_ASYNC (wait till all loaded vs stream results)
-                 .limitToColumn(LimitColumn.NONE) //Optional - default NONE (Include phone + email, limiting to one can improve loading time)
-                 .setActivityAnimations(
-                     android.R.anim.fade_in, android.R.anim.fade_out,
-                     android.R.anim.fade_in,
-                     android.R.anim.fade_out
-                 ) //Optional - default: No animation overrides
-                 .showPickerForResult(ActivityContact.CONTACT_PICKER_REQUEST)*//*
-
-        }
-*/
+    private fun pickContact() {
+        val intent = Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI)
+        startActivityForResult(intent, CONTACT_PICK_CODE)
     }
 
     override fun onDestroyView() {
@@ -80,4 +74,62 @@ class SettingsFragment : Fragment() {
         _binding = null
     }
 
+
+    @SuppressLint("Range")
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+//        val c: Cursor = requireActivity().managedQuery(contactData, null, null, null, null)
+        val contentResolver = requireActivity().contentResolver
+
+        if (resultCode == AppCompatActivity.RESULT_OK) {
+            //calls when user click a contact from contacts (intent) list
+            if (requestCode == CONTACT_PICK_CODE) {
+//                binding.contactLayout..text = ""
+
+                val cursor1: Cursor
+                val cursor2: Cursor?
+
+                //get data from intent
+                val uri = data!!.data
+                cursor1 = contentResolver.query(uri!!, null, null, null, null)!!
+                if (cursor1.moveToFirst()) {
+                    //get contact details
+                    val contactId = cursor1.getString(cursor1.getColumnIndex(ContactsContract.Contacts._ID))
+                    val contactName = cursor1.getString(cursor1.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME))
+                    val idResults = cursor1.getString(cursor1.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER))
+                    val contactThumbnail = cursor1.getString(cursor1.getColumnIndex(ContactsContract.Contacts.PHOTO_THUMBNAIL_URI))
+                    val idResultHold = idResults.toInt()
+                    //set details: contact id, contact name, image
+
+                    //set image, first check if uri/thumbnail is not null
+
+                    contact.name = contactName
+                    if (contactThumbnail != null) {
+                        binding.contactLayout.imgProfile.setImageURI(Uri.parse(contactThumbnail))
+                    }
+                    //check if contact has a phone number or not
+                    if (idResultHold == 1) {
+                        cursor2 = contentResolver.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = " + contactId, null, null)
+                        //a contact may have multiple phone numbers
+                        while (cursor2!!.moveToNext()) {
+                            //get phone number
+                            val contactNumber = cursor2.getString(cursor2.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER))
+                            //set phone number
+//                            binding.secondCheckBox.append("\nPhone: $contactNumber")
+                            contact.phoneNumber = contactNumber
+                        }
+                        cursor2.close()
+                    }
+                    cursor1.close()
+                    binding.contactLayout.tvContactName.text = contact.name
+                    binding.contactLayout.tvContactNumber.text = contact.phoneNumber
+                }
+            }
+
+        } else {
+            //cancelled picking contact
+            Toast.makeText(context, "Cancelled", Toast.LENGTH_SHORT).show()
+        }
+    }
 }

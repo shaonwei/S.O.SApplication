@@ -35,16 +35,17 @@ class SettingsFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         _binding = FragmentSettingsBinding.inflate(inflater, container, false)
 
-        sharedViewModel.message.observe(viewLifecycleOwner, { message ->
+        /*sharedViewModel.message.observe(viewLifecycleOwner, { message ->
             binding.etMessage.setText(message)
-        })
+        })*/
         sharedViewModel.contact.observe(viewLifecycleOwner, { contact ->
             binding.contactLayout.tvContactName.text = contact.name
             binding.contactLayout.tvContactNumber.text = contact.phoneNumber
+            binding.etMessage.setText(contact.text)
         })
 
         binding.btnSave.setOnClickListener {
-            sharedViewModel.changeMessage(binding.etMessage.text.toString())
+//            sharedViewModel.changeMessage(binding.etMessage.text.toString())
             sharedViewModel.changeContact(contact)
 
             findNavController().navigate(R.id.action_SettingsFragment_to_MainFragment)
@@ -105,9 +106,9 @@ class SettingsFragment : Fragment() {
                     //set image, first check if uri/thumbnail is not null
 
                     contact.name = contactName
-                    if (contactThumbnail != null) {
+                   /* if (contactThumbnail != null) {
                         binding.contactLayout.imgProfile.setImageURI(Uri.parse(contactThumbnail))
-                    }
+                    }*/
                     //check if contact has a phone number or not
                     if (idResultHold == 1) {
                         cursor2 = contentResolver.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = " + contactId, null, null)

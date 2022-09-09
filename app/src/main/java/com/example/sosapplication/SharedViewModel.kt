@@ -27,6 +27,7 @@ class SharedViewModel : ViewModel() {
 
     fun sendSMS() {
         val smsManager = SmsManager.getDefault() as SmsManager
+        Logger.getLogger(MainActivity::class.java.name).warning("send sms:" + _contact.value)
 
         smsManager.sendTextMessage(_contact.value?.phoneNumber.toString(), null, _message.value, null, null)
 
@@ -34,7 +35,3 @@ class SharedViewModel : ViewModel() {
         Logger.getLogger(MainActivity::class.java.name).warning("send sms:" + _message.value)
     }
 }
-
-/*private operator fun <T> LiveData<T>.iterator(): Iterator<String> {
-
-}*/

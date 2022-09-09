@@ -35,19 +35,19 @@ class SettingsFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         _binding = FragmentSettingsBinding.inflate(inflater, container, false)
 
-        /*sharedViewModel.message.observe(viewLifecycleOwner, { message ->
+        sharedViewModel.message.observe(viewLifecycleOwner, { message ->
             binding.etMessage.setText(message)
-        })*/
+        })
         sharedViewModel.contact.observe(viewLifecycleOwner, { contact ->
             binding.contactLayout.tvContactName.text = contact.name
             binding.contactLayout.tvContactNumber.text = contact.phoneNumber
-            binding.etMessage.setText(contact.text)
+//            binding.etMessage.setText(contact.text)
         })
 
         binding.btnSave.setOnClickListener {
-//            sharedViewModel.changeMessage(binding.etMessage.text.toString())
+            sharedViewModel.changeMessage(binding.etMessage.text.toString())
             sharedViewModel.changeContact(contact)
-
+            //todo: second save no changes
             findNavController().navigate(R.id.action_SettingsFragment_to_MainFragment)
 
         }

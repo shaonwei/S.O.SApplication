@@ -195,7 +195,7 @@ class MainActivity : AppCompatActivity() {
         // as you specify a parent activity in AndroidManifest.xml.
         when (item.itemId) {
             //go to settings
-            R.id.action_settings -> navController.navigate(R.id.action_BlankFragment_to_MainFragment)
+            R.id.action_settings -> navController.navigate(R.id.action_MainFragment_to_BlankFragment)
         }
         return super.onOptionsItemSelected(item)
 

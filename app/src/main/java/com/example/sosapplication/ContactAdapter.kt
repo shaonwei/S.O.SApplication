@@ -34,7 +34,7 @@ class ContactAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.nameTV.setText(allContacts.get(position).name)
-        holder.numberTV.setText("Last Updated : " + allContacts.get(position).phoneNumber)
+        holder.numberTV.setText(allContacts.get(position).phoneNumber)
         // on below line we are adding click listener to our delete image view icon.
         holder.deleteBTN.setOnClickListener {
             // on below line we are calling a note click
@@ -47,7 +47,7 @@ class ContactAdapter(
         holder.itemView.setOnClickListener {
             // on below line we are calling a note click interface
             // and we are passing a position to it.
-            contactClickInterface.onNoteClick(allContacts.get(position))
+            contactClickInterface.onEditClick(allContacts.get(position))
         }
     }
 
@@ -67,5 +67,5 @@ interface ContactClickDeleteInterface {
 }
 
 interface ContactClickInterface {
-    fun onNoteClick(contact: Contact)
+    fun onEditClick(contact: Contact)
 }

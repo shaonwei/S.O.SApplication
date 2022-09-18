@@ -12,6 +12,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -22,45 +23,67 @@ import com.example.sosapplication.*
 
 class BlankFragment : Fragment(), ContactClickInterface, ContactClickDeleteInterface {
 
-    lateinit var viewModel: ContactViewModel// by activityViewModels()
+    lateinit var viewModel: ContactViewModel //by activityViewModels()
+
+    //    val viewModel: ContactViewModel by activityViewModels()
     lateinit var contactsRV: RecyclerView
     lateinit var addBTN: Button
     private var _binding: FragmentBlankBinding? = null
     private val binding get() = _binding!!
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-    }
+    lateinit var adapter: ContactAdapter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         _binding = FragmentBlankBinding.inflate(inflater, container, false)
         contactsRV = binding.contactsRv
         contactsRV.layoutManager = LinearLayoutManager(context)
-        val adapter = context?.let { ContactAdapter(it, this, this) }
+        adapter = context?.let { ContactAdapter(it, this, this) }!!
         contactsRV.adapter = adapter
 
-        viewModel = ViewModelProvider(
+        /*viewModel = ViewModelProvider(
             this,
-            ViewModelProvider.AndroidViewModelFactory.getInstance(requireActivity().application )
-        ).get(ContactViewModel::class.java)
+            ViewModelProvider.AndroidViewModelFactory.getInstance(requireActivity().application*//* requireActivity().application*//*)
+        ).get(ContactViewModel::class.java)*/
 
+        viewModel = ViewModelProvider.AndroidViewModelFactory(requireActivity().application).create(ContactViewModel::class.java)
+
+        //show list
         viewModel.allContacts.observe(viewLifecycleOwner, Observer { list ->
             list?.let {
                 adapter?.updateList(it)
             }
         })
 
+        //show text
+        viewModel.allContacts.observe(viewLifecycleOwner, Observer { list ->
+            list?.let {
+                binding.etMessage.setText(it.get(0).text)
+            }
+        })
+
+
         binding.btnAdd.setOnClickListener {
             pickContact()
-
         }
 
-        binding.btnSave.setOnClickListener{
-            //todo: check if db
+        binding.btnSave.setOnClickListener {
+            updateMessage(binding.etMessage.text.toString())
             findNavController().navigate(R.id.action_BlankFragment_to_MainFragment)
         }
         return binding.root
     }
+
+    private fun updateMessage(msg: String) {
+        viewModel.allContacts.observe(viewLifecycleOwner, Observer { list ->
+            list?.let {
+              for (i in it){
+                  i.text=msg
+                viewModel.updateContact(i)
+              }
+                adapter?.updateList(it)
+            }
+        })
+    }
+
 
     private fun pickContact() {
         val intent = Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI)
@@ -116,6 +139,7 @@ class BlankFragment : Fragment(), ContactClickInterface, ContactClickDeleteInter
                     cursor1.close()
 //                    binding.contactLayout.tvContactName.text = contact.name
 //                    binding.contactLayout.tvContactNumber.text = contact.phoneNumber
+                    contact.text = binding.etMessage.text.toString()
                     viewModel.addContact(contact)
                 }
             }
@@ -131,7 +155,7 @@ class BlankFragment : Fragment(), ContactClickInterface, ContactClickDeleteInter
         viewModel.deleteContact(contact)
     }
 
-    override fun onNoteClick(contact: Contact) {
+    override fun onEditClick(contact: Contact) {
         TODO("Not yet implemented")
     }
 

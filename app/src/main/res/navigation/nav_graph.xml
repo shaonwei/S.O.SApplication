@@ -25,7 +25,7 @@
         tools:layout="@layout/fragment_main">
 
         <action
-            android:id="@+id/action_MainFragment_to_SettingsFragment"
+            android:id="@+id/action_MainFragment_to_BlankFragment"
             app:destination="@id/ThirdFragment" />
     </fragment>
 
@@ -56,8 +56,6 @@
         <action
             android:id="@+id/action_BlankFragment_to_MainFragment"
             app:destination="@id/MainFragment" />
-        <!-- <action
-             android:id="@+id/action_SecondFragment_to_ContactsFragment"
-             app:destination="@id/ContactsFragment" />-->
+
     </fragment>
 </navigation>

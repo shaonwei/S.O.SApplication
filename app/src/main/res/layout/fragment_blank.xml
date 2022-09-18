@@ -82,14 +82,14 @@
          app:layout_constraintStart_toStartOf="parent"
          app:layout_constraintTop_toBottomOf="@+id/first_checkbox" />-->
 
-    <include
+    <!--<include
         android:id="@+id/contact_layout"
         layout="@layout/item_contact"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_input_layout" />
+        app:layout_constraintTop_toBottomOf="@+id/text_input_layout" />-->
 
     <Button
         android:id="@+id/btn_add"
@@ -99,14 +99,14 @@
         android:text="@string/select_contacts"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/contact_layout" />
+        app:layout_constraintTop_toBottomOf="@+id/text_input_layout" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/contacts_rv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_input_layout"
+        app:layout_constraintTop_toBottomOf="@+id/btn_add"
         tools:listitem="@layout/item_contact" />
 
     <Button

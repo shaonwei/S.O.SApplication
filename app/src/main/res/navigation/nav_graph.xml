@@ -5,6 +5,19 @@
     android:id="@+id/nav_graph"
     app:startDestination="@id/MainFragment">
 
+    <!--    to settings-->
+    <!-- <fragment
+         android:id="@+id/MainFragment"
+         android:name="com.example.sosapplication.fragments.MainFragment"
+         android:label="@string/main_fragment_label"
+         tools:layout="@layout/fragment_main">
+
+         <action
+             android:id="@+id/action_MainFragment_to_SettingsFragment"
+             app:destination="@id/SecondFragment" />
+     </fragment>-->
+
+    <!--    to blank-->
     <fragment
         android:id="@+id/MainFragment"
         android:name="com.example.sosapplication.fragments.MainFragment"
@@ -13,8 +26,10 @@
 
         <action
             android:id="@+id/action_MainFragment_to_SettingsFragment"
-            app:destination="@id/SecondFragment" />
+            app:destination="@id/ThirdFragment" />
     </fragment>
+
+    <!--    to main-->
     <fragment
         android:id="@+id/SecondFragment"
         android:name="com.example.sosapplication.fragments.SettingsFragment"
@@ -24,18 +39,25 @@
         <action
             android:id="@+id/action_SettingsFragment_to_MainFragment"
             app:destination="@id/MainFragment" />
-       <!-- <action
-            android:id="@+id/action_SecondFragment_to_ContactsFragment"
-            app:destination="@id/ContactsFragment" />-->
+        <!-- <action
+             android:id="@+id/action_SecondFragment_to_ContactsFragment"
+             app:destination="@id/ContactsFragment" />-->
     </fragment>
-   <!-- <fragment
-        android:id="@+id/ContactsFragment"
-        android:name="com.example.sosapplication.ActivityEdit"
-        android:label="@string/contacts_fragment_label"
-        tools:layout="@layout/fragment_contacts">
+
+
+    <!--    to main-->
+
+    <fragment
+        android:id="@+id/ThirdFragment"
+        android:name="com.example.sosapplication.fragments.BlankFragment"
+        android:label="@string/settings_fragment_label"
+        tools:layout="@layout/fragment_blank">
 
         <action
-            android:id="@+id/action_ContactsFragment_to_SecondFragment"
-            app:destination="@id/SecondFragment" />
-    </fragment>-->
+            android:id="@+id/action_BlankFragment_to_MainFragment"
+            app:destination="@id/MainFragment" />
+        <!-- <action
+             android:id="@+id/action_SecondFragment_to_ContactsFragment"
+             app:destination="@id/ContactsFragment" />-->
+    </fragment>
 </navigation>

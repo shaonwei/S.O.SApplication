@@ -20,7 +20,7 @@
         android:id="@+id/btn_send"
         android:layout_width="120dp"
         android:layout_height="120dp"
-        android:text="send text"
+        android:text="@string/s_o_s_text"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

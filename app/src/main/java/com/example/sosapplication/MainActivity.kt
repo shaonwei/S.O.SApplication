@@ -76,18 +76,10 @@ class MainActivity : AppCompatActivity() {
         appBarConfiguration = AppBarConfiguration(navController.graph)
         setupActionBarWithNavController(navController, appBarConfiguration)
 
-        binding.fab.setOnClickListener { view ->
+        /*binding.fab.setOnClickListener { view ->
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show()
-
-
-            /*val contactPickerIntent = Intent(
-                Intent.ACTION_PICK,
-                ContactsContract.CommonDataKinds.Phone.CONTENT_URI
-            )
-            startActivityForResult(contactPickerIntent, RESULT_PICK_CONTACT)*/
-
-        }
+        }*/
     }
 
 /*    fun openActivityForResult() {
@@ -164,6 +156,7 @@ class MainActivity : AppCompatActivity() {
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         //handle permission request results || calls when user from Permission request dialog presses Allow or Deny
+    //todo: fix first install
         if (requestCode == CONTACT_PERMISSION_CODE) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 //permission granted, can pick contact

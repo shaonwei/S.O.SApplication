@@ -52,16 +52,20 @@ class SettingsFragment : Fragment() {
 
         }
 
+/*
         binding.contactLayout.btnEditContact.setOnClickListener {
-            /*val contactPickerIntent = Intent(
+            */
+/*val contactPickerIntent = Intent(
                 Intent.ACTION_PICK,
                 ContactsContract.CommonDataKinds.Phone.CONTENT_URI
             )
-            startActivityForResult(contactPickerIntent, REQUEST_CODE)*/
+            startActivityForResult(contactPickerIntent, REQUEST_CODE)*//*
+
 
             pickContact()
 
         }
+*/
         return binding.root
     }
 

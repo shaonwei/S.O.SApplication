@@ -25,7 +25,7 @@ class BlankFragment : Fragment(), ContactClickInterface, ContactClickDeleteInter
 
 //    lateinit var viewModel: ContactViewModel //by activityViewModels()
 
-        val viewModel: ContactViewModel by activityViewModels()
+    val viewModel: ContactViewModel by activityViewModels()
     lateinit var contactsRV: RecyclerView
     lateinit var addBTN: Button
     private var _binding: FragmentBlankBinding? = null
@@ -56,7 +56,8 @@ class BlankFragment : Fragment(), ContactClickInterface, ContactClickDeleteInter
         //show text
         viewModel.allContacts.observe(viewLifecycleOwner, Observer { list ->
             list?.let {
-                binding.etMessage.setText(it.get(0).text)
+                if (!it.isEmpty())
+                    binding.etMessage.setText(it.get(0)?.text)
             }
         })
 
@@ -75,10 +76,10 @@ class BlankFragment : Fragment(), ContactClickInterface, ContactClickDeleteInter
     private fun updateMessage(msg: String) {
         viewModel.allContacts.observe(viewLifecycleOwner, Observer { list ->
             list?.let {
-              for (i in it){
-                  i.text=msg
-                viewModel.updateContact(i)
-              }
+                for (i in it) {
+                    i.text = msg
+                    viewModel.updateContact(i)
+                }
                 adapter?.updateList(it)
             }
         })

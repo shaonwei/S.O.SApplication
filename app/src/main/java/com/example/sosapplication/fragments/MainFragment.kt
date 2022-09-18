@@ -8,6 +8,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.ViewModelProvider
+import com.example.sosapplication.ContactViewModel
 import com.example.sosapplication.SharedViewModel
 import com.example.sosapplication.databinding.FragmentMainBinding
 import com.google.android.material.snackbar.Snackbar
@@ -21,7 +23,8 @@ class MainFragment : Fragment() {
         lateinit var mctx: Context
     }
 
-    private val sharedViewModel: SharedViewModel by activityViewModels()
+//    private val sharedViewModel: SharedViewModel by activityViewModels()
+//    lateinit var viewModel: ContactViewModel
 
     private var _binding: FragmentMainBinding? = null
     private val binding get() = _binding!!
@@ -37,11 +40,12 @@ class MainFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.btnSend.setOnClickListener {
-            val appViewModel: SharedViewModel by activityViewModels()
+            val appViewModel: ContactViewModel by activityViewModels()
+//           val viewModel = ViewModelProvider.AndroidViewModelFactory(requireActivity().application).create(ContactViewModel::class.java)
 
             appViewModel.sendSMS();
-            val toast = Toast.makeText(context, appViewModel.contact.value?.text, Toast.LENGTH_SHORT)
-            toast.show()        }
+           /* val toast = Toast.makeText(context, appViewModel.contact.value?.text, Toast.LENGTH_SHORT)
+            toast.show()*/        }
     }
 
     override fun onDestroyView() {

@@ -23,9 +23,9 @@ import com.example.sosapplication.*
 
 class BlankFragment : Fragment(), ContactClickInterface, ContactClickDeleteInterface {
 
-    lateinit var viewModel: ContactViewModel //by activityViewModels()
+//    lateinit var viewModel: ContactViewModel //by activityViewModels()
 
-    //    val viewModel: ContactViewModel by activityViewModels()
+        val viewModel: ContactViewModel by activityViewModels()
     lateinit var contactsRV: RecyclerView
     lateinit var addBTN: Button
     private var _binding: FragmentBlankBinding? = null
@@ -44,7 +44,7 @@ class BlankFragment : Fragment(), ContactClickInterface, ContactClickDeleteInter
             ViewModelProvider.AndroidViewModelFactory.getInstance(requireActivity().application*//* requireActivity().application*//*)
         ).get(ContactViewModel::class.java)*/
 
-        viewModel = ViewModelProvider.AndroidViewModelFactory(requireActivity().application).create(ContactViewModel::class.java)
+//        viewModel = ViewModelProvider.AndroidViewModelFactory(requireActivity().application).create(ContactViewModel::class.java)
 
         //show list
         viewModel.allContacts.observe(viewLifecycleOwner, Observer { list ->

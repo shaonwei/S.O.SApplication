@@ -1,5 +1,6 @@
 package com.example.sosapplication
 
+import PowerButtonService
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
@@ -18,8 +19,7 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
 import com.example.sosapplication.databinding.ActivityMainBinding
-import com.wafflecopter.multicontactpicker.ContactResult
-import com.wafflecopter.multicontactpicker.MultiContactPicker
+
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
@@ -75,6 +75,9 @@ class MainActivity : AppCompatActivity() {
         navController = findNavController(R.id.nav_host_fragment_content_main)
         appBarConfiguration = AppBarConfiguration(navController.graph)
         setupActionBarWithNavController(navController, appBarConfiguration)
+
+        val intent = Intent(this.applicationContext, PowerButtonService::class.java)
+        this.applicationContext.startService(intent)
 
         /*binding.fab.setOnClickListener { view ->
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)

@@ -32,7 +32,7 @@ class ContactViewModel(application: Application) : AndroidViewModel(application)
         repository.insert(contact)
     }
 
-    fun sendSMS() {
+     fun sendSMS() {
         val smsManager = SmsManager.getDefault() as SmsManager
         Logger.getLogger(MainActivity::class.java.name).warning("sending sms")
         for (contact in allContacts.value!!) {

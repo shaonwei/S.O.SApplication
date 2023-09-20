@@ -1,12 +1,13 @@
 package com.example.sosapplication
 
 import PowerButtonService
-import android.annotation.SuppressLint
-import android.app.Activity
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.view.KeyEvent
+
 import android.content.Intent
+import android.content.IntentFilter
 import android.content.pm.PackageManager
-import android.database.Cursor
-import android.net.Uri
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
@@ -21,16 +22,10 @@ import androidx.core.content.ContextCompat
 import com.example.sosapplication.databinding.ActivityMainBinding
 
 import androidx.core.app.ActivityCompat
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.NavController
-import com.google.android.material.snackbar.Snackbar
+import com.example.sosapplication.fragments.MainFragment
 import java.util.logging.Logger
-import androidx.lifecycle.ViewModelProviders
-import androidx.core.app.ActivityCompat.startActivityForResult
-
-import android.provider.ContactsContract
-import android.widget.Toast.LENGTH_LONG
-import java.lang.Exception
 
 
 const val MY_PERMISSIONS_REQUEST_SEND_SMS = 1
@@ -54,6 +49,14 @@ class MainActivity : AppCompatActivity() {
 
     lateinit var navController: NavController
 
+     val contactViewModel: ContactViewModel by viewModels()
+
+
+    /*private var screenOffReceiver: BroadcastReceiver? = null
+    private var screenOnReceiver: BroadcastReceiver? = null
+    var globalCount: Int = 0*/
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Logger.getLogger(MainActivity::class.java.name).warning("Hello..")
@@ -61,7 +64,7 @@ class MainActivity : AppCompatActivity() {
 //        val tel = this.getSystemService(TELEPHONY_SERVICE) as TelephonyManager
 //        val PhoneNumber = tel.line1Number
 
-        if (checkContactPermission()&&checkSMSPermission()) {
+        if (checkContactPermission() && checkSMSPermission()) {
             //allowed
         } else {
             //not allowed, request
@@ -75,9 +78,20 @@ class MainActivity : AppCompatActivity() {
         navController = findNavController(R.id.nav_host_fragment_content_main)
         appBarConfiguration = AppBarConfiguration(navController.graph)
         setupActionBarWithNavController(navController, appBarConfiguration)
+        val mainFragment = MainFragment() // Create an instance of your fragment
+        val powerButtonReceiver = PowerButtonReceiver(mainFragment)
+        val filter = IntentFilter()
+        filter.addAction(Intent.ACTION_SCREEN_ON)
+        filter.addAction(Intent.ACTION_SCREEN_OFF)
+        registerReceiver(powerButtonReceiver, filter)
 
-        val intent = Intent(this.applicationContext, PowerButtonService::class.java)
-        this.applicationContext.startService(intent)
+//        val intent = Intent(this.applicationContext, PowerButtonService::class.java)
+//        this.applicationContext.startService(intent)
+
+
+        // Register broadcast receivers
+        /*registerScreenOffReceiver()
+        registerScreenOnReceiver()*/
 
         /*binding.fab.setOnClickListener { view ->
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
@@ -159,7 +173,7 @@ class MainActivity : AppCompatActivity() {
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         //handle permission request results || calls when user from Permission request dialog presses Allow or Deny
-    //todo: fix first install
+        //todo: fix first install
         if (requestCode == CONTACT_PERMISSION_CODE) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 //permission granted, can pick contact
@@ -174,6 +188,7 @@ class MainActivity : AppCompatActivity() {
         //check if permission was granted/allowed or not, returns true if granted/allowed, false if not
         return ContextCompat.checkSelfPermission(this, android.Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED
     }
+
     private fun checkSMSPermission(): Boolean {
         //check if permission was granted/allowed or not, returns true if granted/allowed, false if not
         return ContextCompat.checkSelfPermission(this, android.Manifest.permission.SEND_SMS) == PackageManager.PERMISSION_GRANTED
@@ -195,6 +210,16 @@ class MainActivity : AppCompatActivity() {
         }
         return super.onOptionsItemSelected(item)
 
+    }
+
+    override fun onKeyUp(keyCode: Int, event: KeyEvent?): Boolean {
+        if (keyCode == KeyEvent.KEYCODE_POWER) {
+            // Handle the power button press event here
+            // You can perform any action you want when the power button is pressed
+            // For example, you can show a message or trigger some functionality.
+            return true // Consume the event
+        }
+        return super.onKeyUp(keyCode, event)
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -253,5 +278,49 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }*/
+
+/*    override fun onDestroy() {
+        super.onDestroy()
+
+        // Unregister the broadcast receivers when the activity is destroyed
+        unregisterReceiver(screenOffReceiver)
+        unregisterReceiver(screenOnReceiver)
+    }
+
+    private fun registerScreenOffReceiver() {
+        val filter = IntentFilter(Intent.ACTION_SCREEN_OFF)
+
+        screenOffReceiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context?, intent: Intent?) {
+                // Handle the screen off event here
+                if (intent?.action == Intent.ACTION_SCREEN_OFF) {
+                    // Perform your action when the screen turns off\
+                    binding.toolbar.title = "OFF"
+                    globalCount++
+                }
+            }
+        }
+        registerReceiver(screenOffReceiver, filter)
+    }
+
+    private fun registerScreenOnReceiver() {
+        val filter = IntentFilter(Intent.ACTION_SCREEN_ON)
+        screenOnReceiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context?, intent: Intent?) {
+                // Handle the screen on event here
+                if (intent?.action == Intent.ACTION_SCREEN_ON) {
+                    // Perform your action when the screen turns on
+                    binding.toolbar.title = "ON:$globalCount"
+                    globalCount++
+                    if (globalCount % 4 == 0) {
+                        globalCount = 0
+
+                    }
+                }
+            }
+        }
+        registerReceiver(screenOnReceiver, filter)
+    }*/
+
 
 }

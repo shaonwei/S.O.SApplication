@@ -2,6 +2,8 @@ package com.example.sosapplication.fragments
 
 import android.content.Context
 import android.os.Bundle
+import android.view.KeyEvent
+
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -10,6 +12,7 @@ import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import com.example.sosapplication.ContactViewModel
+import com.example.sosapplication.PowerButtonCallback
 import com.example.sosapplication.SharedViewModel
 import com.example.sosapplication.databinding.FragmentMainBinding
 import com.google.android.material.snackbar.Snackbar
@@ -17,7 +20,8 @@ import com.google.android.material.snackbar.Snackbar
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
  */
-class MainFragment : Fragment() {
+class MainFragment : Fragment(), PowerButtonCallback {
+    val appViewModel: ContactViewModel by activityViewModels()
 
     companion object {
         lateinit var mctx: Context
@@ -40,16 +44,19 @@ class MainFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.btnSend.setOnClickListener {
-            val appViewModel: ContactViewModel by activityViewModels()
-//           val viewModel = ViewModelProvider.AndroidViewModelFactory(requireActivity().application).create(ContactViewModel::class.java)
-
-            appViewModel.sendSMS();
-           /* val toast = Toast.makeText(context, appViewModel.contact.value?.text, Toast.LENGTH_SHORT)
-            toast.show()*/        }
+            sendSMS()
+            /* val toast = Toast.makeText(context, appViewModel.contact.value?.text, Toast.LENGTH_SHORT)
+             toast.show()*/
+        }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
+
+    override fun sendSMS() {
+        appViewModel.sendSMS();
+    }
+
 }

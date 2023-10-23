@@ -8,6 +8,7 @@
     android:orientation="vertical"
     android:padding="15dp"
     android:weightSum="10"
+
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".fragments.BlankFragment">
 
@@ -15,14 +16,8 @@
         android:id="@+id/text_input_layout"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1.5"
-        android:hint="@string/s_o_s_hint"
-        android:padding="5dp"
-
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_height="wrap_content"
+        android:hint="@string/s_o_s_hint">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/etMessage"
@@ -35,33 +30,20 @@
     <Button
         android:id="@+id/btn_add"
         android:layout_width="wrap_content"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_weight="1"
-        android:text="@string/select_contacts"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_input_layout" />
+        android:text="@string/select_contacts" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/contacts_rv"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="6"
-
-        app:layout_constraintBottom_toTopOf="@+id/btn_save"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_add"
+        android:layout_height="wrap_content"
         tools:listitem="@layout/item_contact" />
 
     <Button
         android:id="@+id/btn_save"
         android:layout_width="wrap_content"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_weight="1"
-        android:text="@string/save"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        android:text="@string/save" />
 </LinearLayout>

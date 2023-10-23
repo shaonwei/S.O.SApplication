@@ -30,19 +30,19 @@
     </fragment>
 
     <!--    to main-->
-    <fragment
-        android:id="@+id/SecondFragment"
-        android:name="com.example.sosapplication.fragments.SettingsFragment"
-        android:label="@string/settings_fragment_label"
-        tools:layout="@layout/fragment_settings">
+    <!-- <fragment
+         android:id="@+id/SecondFragment"
+         android:name="com.example.sosapplication.fragments.SettingsFragment"
+         android:label="@string/settings_fragment_label"
+         tools:layout="@layout/fragment_settings">
 
-        <action
-            android:id="@+id/action_SettingsFragment_to_MainFragment"
-            app:destination="@id/MainFragment" />
-        <!-- <action
-             android:id="@+id/action_SecondFragment_to_ContactsFragment"
-             app:destination="@id/ContactsFragment" />-->
-    </fragment>
+         <action
+             android:id="@+id/action_SettingsFragment_to_MainFragment"
+             app:destination="@id/MainFragment" />
+         &lt;!&ndash; <action
+              android:id="@+id/action_SecondFragment_to_ContactsFragment"
+              app:destination="@id/ContactsFragment" />&ndash;&gt;
+     </fragment>-->
 
 
     <!--    to main-->

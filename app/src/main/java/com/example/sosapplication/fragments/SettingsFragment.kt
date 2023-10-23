@@ -12,6 +12,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.databinding.BindingAdapter
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.example.sosapplication.CONTACT_PICK_CODE
@@ -35,9 +36,9 @@ class SettingsFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         _binding = FragmentSettingsBinding.inflate(inflater, container, false)
 
-        sharedViewModel.message.observe(viewLifecycleOwner, { message ->
+        sharedViewModel.message.observe(viewLifecycleOwner) { message ->
             binding.etMessage.setText(message)
-        })
+        }
         sharedViewModel.contact.observe(viewLifecycleOwner, { contact ->
             binding.contactLayout.tvContactName.text = contact.name
             binding.contactLayout.tvContactNumber.text = contact.phoneNumber
@@ -48,7 +49,7 @@ class SettingsFragment : Fragment() {
             sharedViewModel.changeMessage(binding.etMessage.text.toString())
             sharedViewModel.changeContact(contact)
             //todo: second save no changes
-            findNavController().navigate(R.id.action_SettingsFragment_to_MainFragment)
+//            findNavController().navigate(R.id.action_SettingsFragment_to_MainFragment)
 
         }
 
@@ -137,4 +138,6 @@ class SettingsFragment : Fragment() {
             Toast.makeText(context, "Cancelled", Toast.LENGTH_SHORT).show()
         }
     }
+
+
 }

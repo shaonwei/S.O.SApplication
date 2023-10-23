@@ -141,6 +141,7 @@ class BlankFragment : Fragment(), ContactClickInterface, ContactClickDeleteInter
 //                    binding.contactLayout.tvContactName.text = contact.name
 //                    binding.contactLayout.tvContactNumber.text = contact.phoneNumber
                     contact.text = binding.etMessage.text.toString()
+
                     viewModel.addContact(contact)
                 }
             }

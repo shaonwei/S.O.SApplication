@@ -1,21 +1,17 @@
 package com.example.sosapplication.fragments
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
-import android.view.KeyEvent
 
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.ViewModelProvider
 import com.example.sosapplication.ContactViewModel
 import com.example.sosapplication.PowerButtonCallback
-import com.example.sosapplication.SharedViewModel
 import com.example.sosapplication.databinding.FragmentMainBinding
-import com.google.android.material.snackbar.Snackbar
 
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
@@ -47,6 +43,16 @@ class MainFragment : Fragment(), PowerButtonCallback {
             sendSMS()
             /* val toast = Toast.makeText(context, appViewModel.contact.value?.text, Toast.LENGTH_SHORT)
              toast.show()*/
+        }
+
+        binding.serviceSwitch.isChecked = false
+        binding.serviceSwitch.setOnCheckedChangeListener { buttonView, isChecked->
+            if (isChecked){
+               /* val serviceIntent = Intent(this, MyIntentService::class.java)
+                startService(serviceIntent)
+*/
+            }
+
         }
     }
 

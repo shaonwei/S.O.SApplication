@@ -1,8 +1,5 @@
 package com.example.sosapplication
 
-import PowerButtonService
-import android.content.BroadcastReceiver
-import android.content.Context
 import android.view.KeyEvent
 
 import android.content.Intent
@@ -22,7 +19,6 @@ import androidx.core.content.ContextCompat
 import com.example.sosapplication.databinding.ActivityMainBinding
 
 import androidx.core.app.ActivityCompat
-import androidx.fragment.app.activityViewModels
 import androidx.navigation.NavController
 import com.example.sosapplication.fragments.MainFragment
 import java.util.logging.Logger
@@ -85,58 +81,8 @@ class MainActivity : AppCompatActivity() {
         filter.addAction(Intent.ACTION_SCREEN_OFF)
         registerReceiver(powerButtonReceiver, filter)
 
-//        val intent = Intent(this.applicationContext, PowerButtonService::class.java)
-//        this.applicationContext.startService(intent)
 
-
-        // Register broadcast receivers
-        /*registerScreenOffReceiver()
-        registerScreenOnReceiver()*/
-
-        /*binding.fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show()
-        }*/
     }
-
-/*    fun openActivityForResult() {
-        startForResult.launch(Intent(this, AnotherActivity::class.java))
-    }
-
-
-    val startForResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-            result: ActivityResult ->
-        if (result.resultCode == Activity.RESULT_OK) {
-            val intent = result.data
-            // Handle the Intent
-            //do stuff here
-        }
-    }
-    protected fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
-        if (resultCode == RESULT_OK) {
-            when (requestCode) {
-                RESULT_PICK_CONTACT -> {
-                    var cursor: Cursor? = null
-                    try {
-                        var phoneNo: String? = null
-                        var name: String? = null
-                        val uri: Uri? = data.data
-                        cursor = contentResolver.query(uri!!, null, null, null, null)
-                        cursor?.moveToFirst()
-                        val phoneIndex: Int = cursor!!.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)
-                        val nameIndex: Int = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME)
-                        phoneNo = cursor.getString(phoneIndex)
-                        name = cursor.getString(nameIndex)
-                       // Log.e("Name and Contact number is", "$name,$phoneNo")
-                    } catch (e: Exception) {
-                        e.printStackTrace()
-                    }
-                }
-            }
-        } else {
-           // Log.e("Failed", "Not able to pick contact")
-        }
-    }*/
 
     private fun requestSMSPermission() {
         if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
@@ -155,9 +101,7 @@ class MainActivity : AppCompatActivity() {
                     MY_PERMISSIONS_REQUEST_SEND_SMS
                 )
 
-                // REQUEST_CODE is an
-                // app-defined int constant. The callback method gets the
-                // result of the request.
+
             }
         } /*else {
             // Permission has already been granted
@@ -227,100 +171,4 @@ class MainActivity : AppCompatActivity() {
         return navController.navigateUp(appBarConfiguration)
                 || super.onSupportNavigateUp()
     }
-
-/*
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        Toast.makeText(this, "mainactivity", Toast.LENGTH_LONG).show()
-        if (requestCode === CONTACT_PICKER_REQUEST) {
-            if (resultCode === RESULT_OK) {
-                val results: List<ContactResult> = MultiContactPicker.obtainResult(data)
-//                Log.d("MyTag", results[0].displayName)
-                println("con" + results.get(0).displayName)
-
-                Toast.makeText(this, "contact", Toast.LENGTH_SHORT).show()
-            } else if (resultCode === RESULT_CANCELED) {
-                println("User closed the picker without selecting items.")
-            }
-        }
-    }
-*/
-
-    /*  @SuppressLint("Range")
-      override fun onActivityResult(reqCode: Int, resultCode: Int, data: Intent?) {
-          super.onActivityResult(reqCode, resultCode, data)
-          if (0 == reqCode) {
-              if (resultCode == RESULT_OK) {
-                  println("in on ActivityResult")
-                  val contactData = data?.data
-                  val c = managedQuery(contactData, null, null, null, null)
-                  if (c.moveToFirst()) {
-                      val id = c.getString(c.getColumnIndexOrThrow(ContactsContract.Contacts._ID))
-                      val hasPhone = c.getString(c.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER))
-                      if (hasPhone.equals("1", ignoreCase = true)) {
-                          val phones = contentResolver.query(
-                              ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
-                              null,
-                              ContactsContract.CommonDataKinds.Phone.CONTACT_ID
-                                      + " = " + id, null, null
-                          )
-                          phones!!.moveToFirst()
-                          val cNumber = phones.getString(phones.getColumnIndex("data1"))
-                          val name = phones.getString(phones.getColumnIndex(ContactsContract.Data.DISPLAY_NAME))
-                          //here you can find out all the thing.
-                          System.out.println("NAME:$name")
-                          *//*Snackbar.make(binding, name, Snackbar.LENGTH_LONG)
-                            .setAction("Action", null).show()*//*
-                        Toast.makeText(applicationContext,name,LENGTH_LONG).show()
-                        //etFirst.setText(cNumber)
-                    }
-                }
-            }
-        }
-    }*/
-
-/*    override fun onDestroy() {
-        super.onDestroy()
-
-        // Unregister the broadcast receivers when the activity is destroyed
-        unregisterReceiver(screenOffReceiver)
-        unregisterReceiver(screenOnReceiver)
-    }
-
-    private fun registerScreenOffReceiver() {
-        val filter = IntentFilter(Intent.ACTION_SCREEN_OFF)
-
-        screenOffReceiver = object : BroadcastReceiver() {
-            override fun onReceive(context: Context?, intent: Intent?) {
-                // Handle the screen off event here
-                if (intent?.action == Intent.ACTION_SCREEN_OFF) {
-                    // Perform your action when the screen turns off\
-                    binding.toolbar.title = "OFF"
-                    globalCount++
-                }
-            }
-        }
-        registerReceiver(screenOffReceiver, filter)
-    }
-
-    private fun registerScreenOnReceiver() {
-        val filter = IntentFilter(Intent.ACTION_SCREEN_ON)
-        screenOnReceiver = object : BroadcastReceiver() {
-            override fun onReceive(context: Context?, intent: Intent?) {
-                // Handle the screen on event here
-                if (intent?.action == Intent.ACTION_SCREEN_ON) {
-                    // Perform your action when the screen turns on
-                    binding.toolbar.title = "ON:$globalCount"
-                    globalCount++
-                    if (globalCount % 4 == 0) {
-                        globalCount = 0
-
-                    }
-                }
-            }
-        }
-        registerReceiver(screenOnReceiver, filter)
-    }*/
-
-
 }

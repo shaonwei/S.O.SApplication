@@ -1,5 +1,7 @@
 package com.example.sosapplication.fragments
 
+import android.app.ActivityManager
+import com.example.sosapplication.PowerButtonService
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -10,6 +12,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import com.example.sosapplication.ContactViewModel
+import com.example.sosapplication.MainActivity
 import com.example.sosapplication.PowerButtonCallback
 import com.example.sosapplication.databinding.FragmentMainBinding
 
@@ -35,6 +38,11 @@ class MainFragment : Fragment(), PowerButtonCallback {
         _binding = FragmentMainBinding.inflate(inflater, container, false)
         return binding.root
     }
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        // Initialize mctx when the fragment is attached to the activity
+        mctx = context
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -45,12 +53,16 @@ class MainFragment : Fragment(), PowerButtonCallback {
              toast.show()*/
         }
 
-        binding.serviceSwitch.isChecked = false
+        binding.serviceSwitch.isChecked = isServiceRunning(mctx,PowerButtonService::class.java)
+        val serviceIntent = Intent(mctx, PowerButtonService::class.java)
+//        serviceIntent.putExtra("context", mctx)
+
         binding.serviceSwitch.setOnCheckedChangeListener { buttonView, isChecked->
             if (isChecked){
-               /* val serviceIntent = Intent(this, MyIntentService::class.java)
-                startService(serviceIntent)
-*/
+                mctx.startService(serviceIntent)
+            }
+            else{
+                mctx.stopService(serviceIntent)
             }
 
         }
@@ -64,5 +76,17 @@ class MainFragment : Fragment(), PowerButtonCallback {
     override fun sendSMS() {
         appViewModel.sendSMS();
     }
+    fun isServiceRunning(context: Context, serviceClass: Class<*>): Boolean {
+        val activityManager = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+        val services = activityManager.getRunningServices(Integer.MAX_VALUE)
+
+        for (service in services) {
+            if (serviceClass.name == service.service.className) {
+                return true
+            }
+        }
+        return false
+    }
+
 
 }

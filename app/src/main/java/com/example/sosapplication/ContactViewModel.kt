@@ -38,7 +38,7 @@ class ContactViewModel(application: Application) : AndroidViewModel(application)
         for (contact in allContacts.value!!) {
 
             smsManager.sendTextMessage(contact.phoneNumber.toString(), null, contact.text, null, null)
-            Logger.getLogger(MainActivity::class.java.name).warning("send sms to" + contact.id + "," + contact.text)
+            Logger.getLogger(MainActivity::class.java.name).warning("send sms to" + contact.id + ", " + contact.text)
         }
 
         //  smsManager.sendTextMessage(number, null, _message.value, null, null)

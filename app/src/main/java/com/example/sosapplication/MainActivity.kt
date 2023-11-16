@@ -47,7 +47,9 @@ class MainActivity : AppCompatActivity() {
 
      val contactViewModel: ContactViewModel by viewModels()
 
-
+    companion object {
+        const val REQUEST_CODE_LOCATION_PERMISSION = 100
+    }
     /*private var screenOffReceiver: BroadcastReceiver? = null
     private var screenOnReceiver: BroadcastReceiver? = null
     var globalCount: Int = 0*/

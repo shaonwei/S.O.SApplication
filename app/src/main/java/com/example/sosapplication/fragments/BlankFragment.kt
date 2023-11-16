@@ -1,7 +1,9 @@
 package com.example.sosapplication.fragments
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.database.Cursor
 import android.os.Bundle
 import android.provider.ContactsContract
@@ -12,6 +14,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -20,6 +23,15 @@ import com.example.sosapplication.databinding.FragmentBlankBinding
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.example.sosapplication.*
+import android.Manifest
+import android.location.LocationManager
+import android.os.Build
+import android.provider.Settings
+import android.util.AttributeSet
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
+import com.google.android.material.snackbar.Snackbar
+
 
 class BlankFragment : Fragment(), ContactClickInterface, ContactClickDeleteInterface {
 
@@ -31,20 +43,16 @@ class BlankFragment : Fragment(), ContactClickInterface, ContactClickDeleteInter
     private var _binding: FragmentBlankBinding? = null
     private val binding get() = _binding!!
     lateinit var adapter: ContactAdapter
+    private val LOCATION_PERMISSION_REQUEST_CODE = 1
 
+
+    @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         _binding = FragmentBlankBinding.inflate(inflater, container, false)
         contactsRV = binding.contactsRv
         contactsRV.layoutManager = LinearLayoutManager(context)
         adapter = context?.let { ContactAdapter(it, this, this) }!!
         contactsRV.adapter = adapter
-
-        /*viewModel = ViewModelProvider(
-            this,
-            ViewModelProvider.AndroidViewModelFactory.getInstance(requireActivity().application*//* requireActivity().application*//*)
-        ).get(ContactViewModel::class.java)*/
-
-//        viewModel = ViewModelProvider.AndroidViewModelFactory(requireActivity().application).create(ContactViewModel::class.java)
 
         //show list
         viewModel.allContacts.observe(viewLifecycleOwner, Observer { list ->
@@ -70,6 +78,28 @@ class BlankFragment : Fragment(), ContactClickInterface, ContactClickDeleteInter
             updateMessage(binding.etMessage.text.toString())
             findNavController().navigate(R.id.action_BlankFragment_to_MainFragment)
         }
+
+        binding.locationSwitch.isChecked=viewModel.readDataFromSharedPreferences("location","default").toBoolean()
+
+        binding.locationSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
+
+            if (isChecked) {
+
+                viewModel.writeToSharedPreferences("location", "true")
+                if (isLocationEnabled(requireContext())) {
+                    // Location is enabled
+                } else {
+                    // Location is not enabled, you can show a message or prompt the user to enable it
+                    val locationSettingsIntent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
+                    startActivity(locationSettingsIntent)
+                }
+                requestLocationPermission()
+            } else {
+                viewModel.writeToSharedPreferences("location", "false")
+            }
+        }
+
+
         return binding.root
     }
 
@@ -160,5 +190,42 @@ class BlankFragment : Fragment(), ContactClickInterface, ContactClickDeleteInter
     override fun onEditClick(contact: Contact) {
         TODO("Not yet implemented")
     }
+
+
+    private fun requestLocationPermission() {
+        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), LOCATION_PERMISSION_REQUEST_CODE)
+        } else {
+            // Permission is already
+//            showUserLocation()
+//            Snackbar.make(this,"you have permission",Snackbar.LENGTH_SHORT)
+        }
+    }
+
+    private fun showUserLocation() {
+        // Enable the My Location layer and move the camera to the user's location
+        if (ContextCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
+//            mMap.isMyLocationEnabled = true
+            // Additional code to customize map view or add markers, etc.
+        }
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                showUserLocation()
+            }
+        }
+    }
+
+    fun isLocationEnabled(context: Context): Boolean {
+        val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
+    }
+
 
 }

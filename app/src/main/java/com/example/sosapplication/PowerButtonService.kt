@@ -10,10 +10,13 @@ import android.hardware.display.DisplayManager
 import android.os.Build
 import android.os.IBinder
 import android.telephony.SmsManager
+import android.util.Log
 import android.view.Display
 import android.view.WindowManager
+import androidx.activity.viewModels
 import androidx.core.app.NotificationCompat
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.ViewModelProvider
 import java.util.logging.Logger
 
 class PowerButtonService : Service() {
@@ -69,6 +72,7 @@ class PowerButtonService : Service() {
         Logger.getLogger(MainActivity::class.java.name).warning("oncreate-service")
 
     }
+
     private fun createNotification(): Notification {
         // Notification channel settings
         val channelId = "your_channel_id"
@@ -92,7 +96,7 @@ class PowerButtonService : Service() {
     }
 
     override fun onBind(intent: Intent?): IBinder? {
-        TODO("Not yet implemented")
+        // Implementation if you need to bind
         return null
     }
 

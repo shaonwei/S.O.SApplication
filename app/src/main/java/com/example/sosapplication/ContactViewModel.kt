@@ -17,6 +17,7 @@ import java.util.logging.Logger
 import android.Manifest
 import android.content.Intent
 import android.location.Location
+import android.os.Looper
 import android.provider.Settings
 import android.util.Log
 import android.widget.Toast
@@ -24,6 +25,9 @@ import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.content.ContextCompat.startActivity
 import com.example.sosapplication.MainActivity.Companion.REQUEST_CODE_LOCATION_PERMISSION
 import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 
 class ContactViewModel(application: Application) : AndroidViewModel(application) {
@@ -47,6 +51,8 @@ class ContactViewModel(application: Application) : AndroidViewModel(application)
         val dao = ContactDatabase.getDatabase(application).getContactsDao()
         repository = ContactRepository(dao)
         allContacts = repository.allContacts
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(application)
+
     }
 
     fun deleteContact(contact: Contact) = viewModelScope.launch(Dispatchers.IO) {
@@ -71,28 +77,35 @@ class ContactViewModel(application: Application) : AndroidViewModel(application)
 //            val location = getLocation()
             getLocation { locationMessage ->
                 if (locationMessage != null) {
+
                     // Send the SMS with the map link here, e.g., by using locationMessage
                     for (contact in allContacts.value!!) {
                         val txt = "${contact.text} \n$locationMessage"
 //                        val locationMessage = "${contact.text}  $locationMessage"
 
                         try {
-                            smsManager.sendTextMessage(contact.phoneNumber.toString(), null, txt, null, null)
+                            smsManager.sendTextMessage(contact.phoneNumber.toString(), null, txt+"1", null, null)
+                            Log.i("SMS", "SMS 1 sent $txt")
                         } catch (e: Exception) {
                             Log.e("SMS", "Error sending SMS: ${e.message}")
                         }
                         Logger.getLogger(MainActivity::class.java.name).warning("send sms to" + contact.id + ", " + locationMessage)
                     }
                 } else {
-                    for (contact in allContacts.value!!) {
-                        smsManager.sendTextMessage(contact.phoneNumber.toString(), null, contact.text, null, null)
+                    Log.i("location", "location is null")
+
+                    for (contact in repository.allContacts.value!!) {
+                        smsManager.sendTextMessage(contact.phoneNumber.toString(), null, contact.text+"2", null, null)
+                        Log.i("SMS", "SMS 2 sent $contact.txt")
+
                         Logger.getLogger(MainActivity::class.java.name).warning("send sms to" + contact.id + ", " + contact.text)
                     }
                 }
             }
         } else {
-            for (contact in allContacts.value!!) {
-                smsManager.sendTextMessage(contact.phoneNumber.toString(), null, contact.text, null, null)
+            for (contact in repository.allContacts.value!!) {
+                smsManager.sendTextMessage(contact.phoneNumber.toString(), null, contact.text+"3", null, null)
+                Log.i("SMS", "SMS 3 sent $contact.txt")
                 Logger.getLogger(MainActivity::class.java.name).warning("send sms to" + contact.id + ", " + contact.text)
             }
         }
@@ -140,30 +153,45 @@ class ContactViewModel(application: Application) : AndroidViewModel(application)
                     // Request location permissions here if not granted
                     //  requestPermissions()
                     callback(null)
+                    return
                 }
-                mFusedLocationClient = LocationServices.getFusedLocationProviderClient(application)
 
-                mFusedLocationClient.lastLocation.addOnCompleteListener { task ->
-                    val location: Location? = task.result
+                mFusedLocationClient.lastLocation.addOnSuccessListener { location ->
                     if (location != null) {
                         val latitude = location.latitude
                         val longitude = location.longitude
-
-                        // Create a Google Maps URL
                         val mapUrl = "https://www.google.com/maps?q=$latitude,$longitude"
                         callback(mapUrl)
-/*
-                        // Include the map URL in the SMS message
-                        val locationMessage = "My current location: $mapUrl"
-                        Logger.getLogger(MainActivity::class.java.name).warning(locationMessage)
-
-                        // Handle the location message here or return it through the callback
-                        callback(locationMessage)
-*/
                     } else {
-                        // Handle the case where location is null
-                        // You can return an appropriate message or handle it as needed
-                        callback(null)
+                        // Last known location is null, request location updates
+                        val locationRequest = LocationRequest.create()
+                            .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+                            .setInterval(10000) // 10 seconds
+                            .setFastestInterval(5000) // 5 seconds
+
+                        val locationCallback = object : LocationCallback() {
+                            override fun onLocationResult(locationResult: LocationResult?) {
+                                super.onLocationResult(locationResult)
+                                locationResult?.let {
+                                    for (loc in it.locations) {
+                                        val latitude = loc.latitude
+                                        val longitude = loc.longitude
+                                        val mapUrl = "https://www.google.com/maps?q=$latitude,$longitude"
+                                        callback(mapUrl)
+                                        return
+                                    }
+                                }
+                                // If locationResult is null or empty, handle the case here
+                                callback(null)
+                            }
+                        }
+
+                        // Request location updates
+                        mFusedLocationClient.requestLocationUpdates(
+                            locationRequest,
+                            locationCallback,
+                            Looper.getMainLooper()
+                        )
                     }
                 }
             } else {

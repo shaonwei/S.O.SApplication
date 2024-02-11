@@ -24,6 +24,7 @@ class MainFragment : Fragment(), PowerButtonCallback {
 
     companion object {
         lateinit var mctx: Context
+//        lateinit var mactivity: MainActivity
     }
 
 //    private val sharedViewModel: SharedViewModel by activityViewModels()
@@ -42,6 +43,7 @@ class MainFragment : Fragment(), PowerButtonCallback {
         super.onAttach(context)
         // Initialize mctx when the fragment is attached to the activity
         mctx = context
+//        mactivity= (context as? MainActivity)!!
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

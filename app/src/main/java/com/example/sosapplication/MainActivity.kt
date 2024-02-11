@@ -45,7 +45,8 @@ class MainActivity : AppCompatActivity() {
 
     lateinit var navController: NavController
 
-     val contactViewModel: ContactViewModel by viewModels()
+    val contactViewModel: ContactViewModel by viewModels()
+//    lateinit var powerButtonService: PowerButtonService
 
     companion object {
         const val REQUEST_CODE_LOCATION_PERMISSION = 100
@@ -82,8 +83,6 @@ class MainActivity : AppCompatActivity() {
         filter.addAction(Intent.ACTION_SCREEN_ON)
         filter.addAction(Intent.ACTION_SCREEN_OFF)
         registerReceiver(powerButtonReceiver, filter)
-
-
     }
 
     private fun requestSMSPermission() {
